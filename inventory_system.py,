@@ -1,0 +1,71 @@
+class Player():
+    def __init__(self, name):
+        self.name = name
+        # Κάθε νέος παίκτης ξεκινάει με μια άδεια 1D λίστα
+        self.inventory = [] 
+
+    def pickup_item(self, item):
+        # ΑΠΟΣΤΟΛΗ 1: Χρησιμοποίησε το .append() για να βάλεις το 'item' 
+        # μέσα στη λίστα self.inventory
+        if item not in self.inventory:
+            self.inventory.append(item)
+            print(f"Μάζεψες: {item}")
+        else:
+            print ("Το έχεις ήδη")       
+        
+
+    def show_bag(self):
+        return self.inventory
+        # ΑΠΟΣΤΟΛΗ 2: Κάνε ένα print τη λίστα self.inventory 
+        # για να δούμε τι έχει μέσα
+        print (self.inventory)
+
+    def discart_item(self, item):
+        while True:
+            if item in self.inventory:
+                choice= input(f"Είσαι σίγουρος οτι θέλεις να πετάξεις το {item}?\n(YES/NO): ").upper().strip()
+                if choice not in ("YES","yes","NO","no","υεσ","ΥΕΣ","ΝΟ","νο"):
+                    print ("ΜΗ ΕΓΚΥΡΗ ΕΠΙΛΟΓΗ ")
+                    continue
+                if choice in ("YES","yes","υεσ","ΥΕΣ"):
+                    self.inventory.remove(item)
+                    print (f"Πέταξες το {item}")
+                    continue
+                break
+            break
+        return self.inventory
+    
+    def use_item(self, item):
+        while True:
+            if item in self.inventory:
+                choice= input(f"Θέλεις να χρησιμοποιήσεις το {item}?\n(YES/NO): ").upper().strip()
+                if choice not in ("YES","yes","NO","no","υεσ","ΥΕΣ","ΝΟ","νο"):
+                    print ("ΜΗ ΕΓΚΥΡΗ ΕΠΙΛΟΓΗ ")
+                    continue
+                if choice in ("YES","yes","υεσ","ΥΕΣ"):
+                    self.inventory.remove(item)
+                    print (f"χρησιμοποίησες το {item}")
+                    continue
+                break
+            break
+        return self.inventory
+                 
+        
+# --- ΚΥΡΙΩΣ ΠΡΟΓΡΑΜΜΑ ---
+
+# 1. Φτιάξε τον παίκτη σου
+hero = Player("Leon")
+
+# 2. Βάλε τον να μαζέψει ένα "Green Herb" καλώντας την pickup_item
+hero.pickup_item("Green Herb")
+
+# 3. Βάλε τον να μαζέψει και την καραμπίνα "Shotgun"
+hero.pickup_item("Shotgun")
+hero.pickup_item("Shotgun")
+hero.discart_item("Shotgun")
+hero.use_item("Green Herb")
+
+# Αν η λίστα έχει κάτι μέσα (δηλαδή είναι True)
+# Το σύστημα τρέχει τη show_bag(), παίρνει πίσω τη λίστα, και μετά ελέγχει αν είναι άδεια
+if hero.show_bag(): 
+    print(f"Σου απομένουν: {hero.show_bag()}")
