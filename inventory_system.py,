@@ -1,35 +1,30 @@
 class Player():
     def __init__(self, name):
         self.name = name
-        # Κάθε νέος παίκτης ξεκινάει με μια άδεια 1D λίστα
         self.inventory = [] 
 
     def pickup_item(self, item):
-        # ΑΠΟΣΤΟΛΗ 1: Χρησιμοποίησε το .append() για να βάλεις το 'item' 
-        # μέσα στη λίστα self.inventory
-        if item not in self.inventory:
+        if len(self.inventory) == 3:
+            print("Η τσάντα είναι γεμάτη")
+        elif item not in self.inventory:
             self.inventory.append(item)
             print(f"Μάζεψες: {item}")
         else:
-            print ("Το έχεις ήδη")       
-        
+            print("Το έχεις ήδη")       
 
     def show_bag(self):
         return self.inventory
-        # ΑΠΟΣΤΟΛΗ 2: Κάνε ένα print τη λίστα self.inventory 
-        # για να δούμε τι έχει μέσα
-        print (self.inventory)
 
     def discart_item(self, item):
         while True:
             if item in self.inventory:
-                choice= input(f"Είσαι σίγουρος οτι θέλεις να πετάξεις το {item}?\n(YES/NO): ").upper().strip()
+                choice = input(f"Είσαι σίγουρος οτι θέλεις να πετάξεις το {item}?\n(YES/NO): ").upper().strip()
                 if choice not in ("YES","yes","NO","no","υεσ","ΥΕΣ","ΝΟ","νο"):
-                    print ("ΜΗ ΕΓΚΥΡΗ ΕΠΙΛΟΓΗ ")
+                    print("ΜΗ ΕΓΚΥΡΗ ΕΠΙΛΟΓΗ ")
                     continue
                 if choice in ("YES","yes","υεσ","ΥΕΣ"):
                     self.inventory.remove(item)
-                    print (f"Πέταξες το {item}")
+                    print(f"Πέταξες το {item}")
                     continue
                 break
             break
@@ -38,34 +33,52 @@ class Player():
     def use_item(self, item):
         while True:
             if item in self.inventory:
-                choice= input(f"Θέλεις να χρησιμοποιήσεις το {item}?\n(YES/NO): ").upper().strip()
+                choice = input(f"Θέλεις να χρησιμοποιήσεις το {item}?\n(YES/NO): ").upper().strip()
                 if choice not in ("YES","yes","NO","no","υεσ","ΥΕΣ","ΝΟ","νο"):
-                    print ("ΜΗ ΕΓΚΥΡΗ ΕΠΙΛΟΓΗ ")
+                    print("ΜΗ ΕΓΚΥΡΗ ΕΠΙΛΟΓΗ ")
                     continue
                 if choice in ("YES","yes","υεσ","ΥΕΣ"):
                     self.inventory.remove(item)
-                    print (f"χρησιμοποίησες το {item}")
+                    print(f"Χρησιμοποίησες το {item}")
                     continue
                 break
             break
         return self.inventory
-                 
+
+    def attack(self, target):
+        if target.health>0:
+            target.health -= 20
+            print(f"Ο {self.name} επιτέθηκε στο {target.name}! Το target έχει πλέον {target.health} HP.")
         
+        # Ο έλεγχος θανάτου προστέθηκε εδώ
+        else:
+            print(f"Το {target.name} έπεσε νεκρό!")
+                 
+class Enemy():
+    def __init__(self, name, health):
+        self.name = name
+        self.health = health        
+
+
 # --- ΚΥΡΙΩΣ ΠΡΟΓΡΑΜΜΑ ---
-
-# 1. Φτιάξε τον παίκτη σου
 hero = Player("Leon")
+zombie = Enemy("Mutant Zombie", 100)
 
-# 2. Βάλε τον να μαζέψει ένα "Green Herb" καλώντας την pickup_item
 hero.pickup_item("Green Herb")
+hero.pickup_item("Shotgun")
+hero.pickup_item("Handgun")
+hero.pickup_item("Key")
 
-# 3. Βάλε τον να μαζέψει και την καραμπίνα "Shotgun"
-hero.pickup_item("Shotgun")
-hero.pickup_item("Shotgun")
-hero.discart_item("Shotgun")
+print(hero.show_bag())
+
+hero.discart_item("Handgun")
 hero.use_item("Green Herb")
 
-# Αν η λίστα έχει κάτι μέσα (δηλαδή είναι True)
-# Το σύστημα τρέχει τη show_bag(), παίρνει πίσω τη λίστα, και μετά ελέγχει αν είναι άδεια
-if hero.show_bag(): 
-    print(f"Σου απομένουν: {hero.show_bag()}")
+# Βαράμε το ζόμπι 5 φορές για να δούμε τη ζωή του να μηδενίζει
+hero.attack(zombie)
+hero.attack(zombie)
+hero.attack(zombie)
+hero.attack(zombie)
+hero.attack(zombie)
+hero.attack(zombie)
+hero.attack(zombie)
