@@ -1,7 +1,9 @@
 class Player():
-    def __init__(self, name):
+    def __init__(self, name, health):
         self.name = name
+        self.health=health
         self.inventory = [] 
+        self.equiped_weapon = None
 
     def pickup_item(self, item):
         if len(self.inventory) == 3:
@@ -46,39 +48,57 @@ class Player():
         return self.inventory
 
     def attack(self, target):
-        if target.health>0:
-            target.health -= 20
-            print(f"Ο {self.name} επιτέθηκε στο {target.name}! Το target έχει πλέον {target.health} HP.")
-        
-        # Ο έλεγχος θανάτου προστέθηκε εδώ
-        else:
+        if target.health<=0:
+            print(f"Τo {target.name} είναι ηδη νερκό!")
+            return
+        target.health -= 20
+        print(f"Ο {self.name} επιτέθηκε στο {target.name}! Το {target.name} έχει πλέον {target.health} HP.")
+        if target.health <= 0:
             print(f"Το {target.name} έπεσε νεκρό!")
+
+    def heal(self):
+        if self.health<=0:
+            print ("ΕΠΕΣΕΣ")
+        else:
+            self.health+=10
+            print (f"Πήρες Green Herb και ανέκτησες 15 HP\nΗ ζωή σου είναι {self.health}")
+
+    def Equip_weapon(self, weapon_object):
+        self.equiped_weapon= weapon_object
+        print (f"Ο {self.name} εξόπλισε το {self.equiped_weapon.name}")
                  
 class Enemy():
     def __init__(self, name, health):
         self.name = name
-        self.health = health        
+        self.health = health      
+    def Attack(self, target):
+        if self.health<=0:
+            print (f"To {self.name} είναι νεκρό δεν μπορεί να επιτεθεί")
+            return
+        if target.health>0:
+            target.health-=15
+            print (f"Ο Το {self.name} έκανε επίθεση και ο {target.name} έχει {target.health} HP")
+        else:
+            print (f"Game Over")  
+
+class Weapon():
+    def __init__ (self,name, power, ammo):
+        self.name=name
+        self.ammo=ammo
+        self.power=power
+        self.multyplier=1
+    def shoot(self, user, target):
+        if self.ammo<=0:
+            print (f"To {self.name} δεν έχει αρκετές σφαίρες")
+        else:
+            self.ammo-=1
+            target.health -= self.power
+            print (f"O {user.name} έκανε {self.power} στον {target.name} με το {self.name} και έχει {self.ammo} και έχει {target.health}")
 
 
 # --- ΚΥΡΙΩΣ ΠΡΟΓΡΑΜΜΑ ---
-hero = Player("Leon")
+hero = Player("Leon", 200)
 zombie = Enemy("Mutant Zombie", 100)
-
-hero.pickup_item("Green Herb")
-hero.pickup_item("Shotgun")
-hero.pickup_item("Handgun")
-hero.pickup_item("Key")
-
-print(hero.show_bag())
-
-hero.discart_item("Handgun")
-hero.use_item("Green Herb")
-
-# Βαράμε το ζόμπι 5 φορές για να δούμε τη ζωή του να μηδενίζει
-hero.attack(zombie)
-hero.attack(zombie)
-hero.attack(zombie)
-hero.attack(zombie)
-hero.attack(zombie)
-hero.attack(zombie)
-hero.attack(zombie)
+Matilda=Weapon("Matilda", 15, 20)
+hero.Equip_weapon(Matilda)
+hero.equiped_weapon.shoot(hero, zombie)
